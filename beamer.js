@@ -3,7 +3,7 @@ var beamerscore = 1500;
 
 function spawnBeamer() {
 	beamerwait = 1000;
-	var beamer = PIXI.Sprite.fromImage('BEAMER.PNG');
+	var beamer = PIXI.Sprite.fromImage('beamer.png');
 	beamers.addChild(beamer);
 	beamer.health = 3;
 	beamer.anchor.x = 0;
