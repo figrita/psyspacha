@@ -3,7 +3,7 @@ var GHEIGHT = 600;
 //size of the game as rendered
 
 var MWIDTH = 600;
-var MHEIGHT = 400;
+var MHEIGHT = 300;
 //size of the playable, tiled map area
 
 var score = 0;
@@ -52,7 +52,7 @@ function create() {
 	mapSprite.y = 0;
 	spawnPlayer();
 	spawnBeamer();
-	//spawnBeamer();
+	//spawnSnake();
 	animate();
 }
 
