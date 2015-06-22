@@ -19,6 +19,10 @@ function levelMachine(level){
     else {
         snakewait += level.snakeWait;
     }
+
+    if (getRandomInt(0, 1000) === 1){
+        spawnMulti();
+    }
 }
 
 function level(beamerChance, beamerWait, snakeChance, snakeWait){

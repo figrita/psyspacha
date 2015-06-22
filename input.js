@@ -71,24 +71,6 @@ function input() {
 		--buly;
 	};
 
-	if (buly) {
-		if (bulx) {
-			bulvy = buly * 7;
-			bulvx = bulx * 7;
-		}
-		else {
-			bulvy = buly * 10;
-			bulvx = 0;
-		}
-	}
-	else if (bulx) {
-		bulvx = bulx * 10;
-		bulvy = 0;
-	}
-	else {
-		bulvx = 0;
-		bulvy = 0;
-	}
 }
 
 function keyboard(keyCode) {

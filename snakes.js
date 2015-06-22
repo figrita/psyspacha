@@ -40,9 +40,9 @@ function upSnake(thissnake){
 			return 0;
 		}
 		thissnake.children.forEach(function (thissnakebit) {
-			collideRect(player, thissnakebit, 1, 0);
+			collideRect(player, thissnakebit, player.snakeHandler, null);
 			bullets.children.forEach(function (thisbullet) {
-				collideRect(thisbullet, thissnakebit, 1, 1);
+				collideRect(thisbullet, thissnakebit, thisbullet.collideHandler, thissnakebit.collideHandler);
 			});
 		});
 		if (thissnake.stepcounter == snakesteps) {

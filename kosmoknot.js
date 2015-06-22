@@ -8,7 +8,7 @@ var MHEIGHT = 300;
 
 var score = 0;
 
-var renderer = new PIXI.WebGLRenderer(GWIDTH, GHEIGHT, {backgroundColor: 0x000000});
+var renderer = new PIXI.CanvasRenderer(GWIDTH, GHEIGHT, {backgroundColor: 0x000000});
 document.body.appendChild(renderer.view);
 
 var container = new PIXI.Container();
@@ -22,11 +22,20 @@ container.addChild(beamers);
 var snakes = new PIXI.Container();
 container.addChild(snakes);
 
+var powerups = new PIXI.Container();
+container.addChild(powerups);
+
 var bulx = 0,//input counters
 	buly = 0;
 var bulvx = 0,
 	bulvy = 0;
 var bulwait = 0;//timer for next bullet
+var multishoot = false;
+var multitime = 0;
+var cs2 = Math.cos(.15);
+var sn2 = Math.sin(.15);
+var cs3 = Math.cos(-.15);
+var sn3 = Math.sin(-.15);
 
 var player;
 var mapTexture;
@@ -97,30 +106,35 @@ function hexCorrect(character) {
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 function collideRect(object, target, collidehandlerobj, collidehandlertar) {
 	if (object.y < target.y + target.height && target.y < object.y + object.height){
 		if (object.x < target.x + target.width && target.x < object.x + object.width) {
 			if (collidehandlerobj)
-				object.collideHandler();
+				collidehandlerobj();
 			if (collidehandlertar)
-				target.collideHandler();
+				collidehandlertar();
+			return 1;
 		} else if (object.x < target.x + target.width - MWIDTH && target.x - MWIDTH < object.x + object.width){
-			if (collidehandlerobj)
-				object.collideHandler();
+			if(collidehandlerobj)
+				collidehandlerobj();
 			if (collidehandlertar)
-				target.collideHandler();
+				collidehandlertar();
+			return 1;
 		}
 	} else if (object.y < target.y + target.height - MHEIGHT && target.y - MHEIGHT < object.y + object.height){
 		if (object.x < target.x + target.width - (MWIDTH/2) && target.x - (MWIDTH/2) < object.x + object.width) {
-			if (collidehandlerobj)
-				object.collideHandler();
+			if(collidehandlerobj)
+				collidehandlerobj();
 			if (collidehandlertar)
-				target.collideHandler();
+				collidehandlertar();
+			return 1;
 		} else if (object.x < target.x + target.width + (MWIDTH/2) && target.x + (MWIDTH/2) < object.x + object.width){
-			if (collidehandlerobj)
-				object.collideHandler();
+			if(collidehandlerobj)
+				collidehandlerobj();
 			if (collidehandlertar)
-				target.collideHandler();
+				collidehandlertar();
+			return 1;
 		}
 	} else {
 		return 0;
@@ -130,7 +144,9 @@ function collideRect(object, target, collidehandlerobj, collidehandlertar) {
 function update() {
 	beamers.children.forEach(upBeamer);
 	snakes.children.forEach(upSnake);
+	upBullet();
 	upPlayer();
+	upPowerups();
 	levelMachine(level1);
 	scoretext.text = "Score: " + score;
 }

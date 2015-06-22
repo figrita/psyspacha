@@ -47,7 +47,7 @@ function upBeamer(thisbeamer){
 			thisbeamer.tint = thisbeamer.colors[thisbeamer.cindex];
 		}
 		bullets.children.forEach(function (thisbullet) {
-			collideRect(thisbullet, thisbeamer, 1, 1);
+			collideRect(thisbullet, thisbeamer, thisbullet.collideHandler, thisbeamer.collideHandler);
 		});
 		thisbeamer.firecounter--;
 	} else {
@@ -55,6 +55,10 @@ function upBeamer(thisbeamer){
 		thisbeamer.tint = 0xFFFFFF;
 		fireBeam(thisbeamer);
 		thisbeamer.cindex = 1;
+	}
+	if (thisbeamer.hit == true) {
+		thisbeamer.tint = 0xFF0000;
+		thisbeamer.hit = false;
 	}
 }
 
@@ -64,8 +68,7 @@ function fireBeam(thisbeamer){
 	if (thisbeamer.beamlength > 0){
 		if(thisbeamer.beamlength == 56 || thisbeamer.beamlength == 46){
 			thisbeamer.visible = false;
-		}
-		if(thisbeamer.beamlength == 52 || thisbeamer.beamlength == 40){
+		} else if(thisbeamer.beamlength == 52 || thisbeamer.beamlength == 40){
 			thisbeamer. visible = true;
 		}
 		if(thisbeamer.beamlength <= 10 && thisbeamer.beamlength >= 2) {
@@ -85,6 +88,10 @@ function fireBeam(thisbeamer){
 			if (player.x < thisbeamer.x + thisbeamer.width + MWIDTH/2 && player.x + player.width > thisbeamer.x + MWIDTH/2){
 				player.collideHandler();
 			}
+		} else {
+			bullets.children.forEach(function (thisbullet) {
+				collideRect(thisbullet, thisbeamer, thisbullet.collideHandler, thisbeamer.collideHandler);
+			});
 		}
 		thisbeamer.beamlength--;
 	} else {

@@ -16,6 +16,12 @@ function spawnPlayer(){
             player.invincibleCounter = 30;
         }
     };
+    player.snakeHandler = function() {
+        if (player.invincibleCounter <= 0){
+            player.health += 10;
+            player.invincibleCounter = 30;
+        }
+    };
     player.getHealth = function(){
         return player.health;
     };
@@ -64,12 +70,5 @@ function upPlayer() {
         player.invincibleCounter--;
     } else {
         player.tint = 0x00ff00 + tintd;
-    }
-    bullets.children.forEach(upBullet);
-    if (bulwait) {
-        bulwait--;
-    }
-    else if (bulvy || bulvx) {
-        fireBullet();
     }
 }
