@@ -40,7 +40,7 @@ function upSnake(thissnake){
 			return 0;
 		}
 		thissnake.children.forEach(function (thissnakebit) {
-			collideRect(player, thissnakebit, player.snakeHandler, null);
+			collideRect(player, thissnakebit, player.collideHandler, null);
 			bullets.children.forEach(function (thisbullet) {
 				collideRect(thisbullet, thissnakebit, thisbullet.collideHandler, thissnakebit.collideHandler);
 			});

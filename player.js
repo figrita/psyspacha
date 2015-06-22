@@ -16,12 +16,6 @@ function spawnPlayer(){
             player.invincibleCounter = 30;
         }
     };
-    player.snakeHandler = function() {
-        if (player.invincibleCounter <= 0){
-            player.health += 10;
-            player.invincibleCounter = 30;
-        }
-    };
     player.getHealth = function(){
         return player.health;
     };
