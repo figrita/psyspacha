@@ -8,9 +8,16 @@ var MHEIGHT = 300;
 
 var score = 0;
 
-var renderer = new PIXI.CanvasRenderer(GWIDTH, GHEIGHT, {backgroundColor: 0x000000});
+var RENDER_MARGIN = 80;
+
+var renderer = new PIXI.WebGLRenderer(GWIDTH, GHEIGHT, {backgroundColor: 0x000000});
 document.body.appendChild(renderer.view);
 
+var gamePort;
+var portContainer = new PIXI.Container();
+var gameSprite;
+var bulger = new BulgePinchFilter();
+var count = 0;
 var container = new PIXI.Container();
 var bullets = new PIXI.Container();
 container.addChild(bullets);
@@ -50,18 +57,21 @@ var loader = PIXI.loader;
 loader.add('player', "playersprite.png");
 loader.add('bullet', "bullet.png");
 loader.add('beamer', "beamer.png");
-loader.add('snakes', "newerpart.png");
 loader.once('complete', create);
 loader.load();
 
 function create() {
-	mapTexture = new PIXI.RenderTexture(renderer, MWIDTH + 80, MHEIGHT + 80, PIXI.SCALE_MODES.LINEAR, 1);
+	mapTexture = new PIXI.RenderTexture(renderer, MWIDTH + RENDER_MARGIN, MHEIGHT + RENDER_MARGIN, PIXI.SCALE_MODES.LINEAR, 1);
 	mapSprite = new PIXI.Sprite(mapTexture);
 	mapSprite.x = 0;
 	mapSprite.y = 0;
+	portContainer.addChild(mapSprite);
+	gamePort = new PIXI.RenderTexture(renderer, GWIDTH, GHEIGHT, PIXI.SCALE_MODES.LINEAR, 1);
+	gameSprite = new PIXI.Sprite(gamePort);
+	gameSprite.anchor.set(0.5);
+	gameSprite.x = GWIDTH/2;
+	gameSprite.y = GHEIGHT/2;
 	spawnPlayer();
-	spawnBeamer();
-	//spawnSnake();
 	animate();
 }
 
@@ -141,11 +151,18 @@ function collideRect(object, target, collidehandlerobj, collidehandlertar) {
 	}
 }
 
+function drawMore(x, y, width, height){
+	beamgfx.drawCircle(x, y, width, height);
+	beamgfx.drawCircle(x + MWIDTH, y, width, height);
+	beamgfx.drawCircle(.5 * MWIDTH + x, y + MHEIGHT, width, height);
+	beamgfx.drawCircle(x - MWIDTH *.5, y + MHEIGHT, width, height);
+}
+
 function update() {
 	beamers.children.forEach(upBeamer);
 	snakes.children.forEach(upSnake);
-	upBullet();
 	upPlayer();
+	upBullet();
 	upPowerups();
 	levelMachine(level1);
 	scoretext.text = "Score: " + score;

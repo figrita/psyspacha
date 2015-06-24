@@ -1,3 +1,5 @@
+//this code is pretty much written by https://github.com/kittykatattack
+
 // keycodes
 var left = keyboard(37),
 	up = keyboard(38),
@@ -11,6 +13,9 @@ var wKey = keyboard(87),
 	aKey = keyboard(65),
 	sKey = keyboard(83),
 	dKey = keyboard(68);
+
+var fKey = keyboard(70);
+var fire = false;
 // /keycodes
 
 function input() {
@@ -70,6 +75,14 @@ function input() {
 	sKey.release = function() {
 		--buly;
 	};
+
+	fKey.press = function(){
+		fire = true;
+	}
+
+	fKey.release = function(){
+		fire = false;
+	}
 
 }
 

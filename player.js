@@ -13,7 +13,7 @@ function spawnPlayer(){
     player.collideHandler = function() {
         if (player.invincibleCounter <= 0){
             player.health -= 10;
-            player.invincibleCounter = 30;
+            player.invincibleCounter = 50;
         }
     };
     player.getHealth = function(){

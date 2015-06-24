@@ -56,16 +56,16 @@ function upBullet() {
     sn3 = Math.sin(-.2);
     if (buly) {
         if (bulx) {
-            bulvy = buly * 5;
-            bulvx = bulx * 5;
+            bulvy = buly * 7;
+            bulvx = bulx * 7;
         }
         else {
-            bulvy = buly * 7;
+            bulvy = buly * 10;
             bulvx = 0;
         }
     }
     else if (bulx) {
-        bulvx = bulx * 7;
+        bulvx = bulx * 10;
         bulvy = 0;
     }
     else {

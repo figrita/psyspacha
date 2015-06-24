@@ -6,7 +6,7 @@ function spawnSnake(){
 	var snakex = getRandomInt(0, MWIDTH);
 	var snakey = getRandomInt(0, MHEIGHT);
 	var wholesnake = new PIXI.Container();
-	wholesnake.health = 5;
+	wholesnake.health = 15;
 	wholesnake.hit = false;
 	wholesnake.directions = new Array(20);
 	wholesnake.directions[20] = getRandomInt(1,2);
@@ -99,8 +99,8 @@ function upSnake(thissnake){
 					thissnake.getChildAt(i).visible = false;
 				}
 				if ( 60 - thissnake.deathflail - i > 0 && 60 - thissnake.deathflail - i < 20){
-					beamgfx.lineStyle(1, 0xFFFFFF, 1 / (60 - thissnake.deathflail - i));
-					beamgfx.drawCircle(thissnake.getChildAt(i).x +.5 * thissnake.getChildAt(i).width, thissnake.getChildAt(i).y +.5 * thissnake.getChildAt(i).height, (60 - thissnake.deathflail - i)/2);
+					beamgfx.lineStyle(3, thissnake.colors[i], 1 / (60 - thissnake.deathflail - i));
+					drawMore(thissnake.getChildAt(i).x +.5 * thissnake.getChildAt(i).width, thissnake.getChildAt(i).y +.5 * thissnake.getChildAt(i).height, (60 - thissnake.deathflail - i));
 				}
 			}
 		} else {

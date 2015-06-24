@@ -41,6 +41,7 @@ function upBeamer(thisbeamer){
 	thisbeamer.x += thisbeamer.vx;
 	thisbeamer.y += thisbeamer.vy;
 	hexCorrect(thisbeamer);
+	collideRect(thisbeamer, player, null, player.collideHandler);
 	if (thisbeamer.firecounter > 0){
 		if(thisbeamer.firecounter % 4 == 0){
 			thisbeamer.cindex++;

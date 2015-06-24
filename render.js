@@ -1,13 +1,12 @@
 function renderMap(x, y, clearit) {
-	if (clearit) {
-		renderer.clearBeforeRender = true;
-	}
-	mapSprite.x = x;
-	mapSprite.y = y;
-	renderer.render(mapSprite);
-	if (clearit) {
+	if (clearit)
+		gamePort.clear();
+	mapSprite.x = x + GWIDTH/2 - player.x;
+	mapSprite.y = y + GHEIGHT/2 -20 - player.y;
+	gamePort.render(portContainer);
+	/*if (clearit) {
 		renderer.clearBeforeRender = false;
-	}
+	}*/
 }
 
 function render() {
@@ -30,6 +29,7 @@ function render() {
 					renderMap((j - 1) * MWIDTH, i * MHEIGHT, false);
 					if (i === 0) {
 						renderMap((j - .5) * MWIDTH, (i - 1) * MHEIGHT, false);
+						renderMap((j - 1.5) * MWIDTH, (i - 1) * MHEIGHT, false);//adding this square for player centered movement
 					}
 				}
 				renderMap((j + .5) * MWIDTH, (i - 1) * MHEIGHT, false);
@@ -49,5 +49,12 @@ function render() {
 			}
 		}
 	}
+	renderer.clearBeforeRender = true;
+	/*gameSprite.scale.x = 1 + Math.sin(count) * 0.02;
+	gameSprite.scale.y = 1 + Math.sin(count) * 0.02;
+	count += 0.02;*/
+	gameSprite.filters = [bulger];
+	renderer.render(gameSprite);
+	renderer.clearBeforeRender = false;
 	renderer.render(text);
 }
