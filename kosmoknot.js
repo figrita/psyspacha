@@ -1,5 +1,5 @@
 var GWIDTH = 800;
-var GHEIGHT = 600;
+var GHEIGHT = 650;
 //size of the game as rendered
 
 var MWIDTH = 600;

@@ -1,8 +1,8 @@
 function renderMap(x, y, clearit) {
 	if (clearit)
 		gamePort.clear();
-	mapSprite.x = x + GWIDTH/2 - player.x;
-	mapSprite.y = y + GHEIGHT/2 -20 - player.y;
+	mapSprite.x = x + GWIDTH/2 - player.width/2 - player.x;
+	mapSprite.y = y + GHEIGHT/2 - player.height/2 - player.y;
 	gamePort.render(portContainer);
 	/*if (clearit) {
 		renderer.clearBeforeRender = false;
@@ -21,7 +21,7 @@ function render() {
 //	the mapSprite is rendered multiple times per tile for when sprites rest
 //	on borders
 
-	for (var i = 0; i < ty; i++) {
+	for (var i = 0; i < ty + 1; i++) {
 		if (i % 2 === 0) {
 			for (var j = 0; j < tx; j++) {
 				renderMap(j * MWIDTH, i * MHEIGHT, i === 0 && j === 0);
@@ -36,7 +36,7 @@ function render() {
 			}
 		}
 		else {
-			for (j = 0; j <= tx; j++) {
+			for (j = 0; j <= tx + 1; j++) {
 				renderMap((j - .5) * MWIDTH, i * MHEIGHT, false);
 				if (j === 0) {
 					renderMap((j - 1.5) * MWIDTH, i * MHEIGHT, false);
