@@ -53,10 +53,17 @@ var tx = GWIDTH / MWIDTH;
 var tinter = 0x000005;//value to tint player by
 var tintd = 0x000020;//value to change tinter by
 
+var bg;
+var bbg;
+var bbgc;
+var bbgm;
+
 var loader = PIXI.loader;
 loader.add('player', "playersprite.png");
 loader.add('bullet', "bullet.png");
 loader.add('beamer', "beamer.png");
+loader.add('bg', "bg.png");
+loader.add('bbg', "bbg.png");
 loader.once('complete', create);
 loader.load();
 
@@ -71,6 +78,17 @@ function create() {
 	gameSprite.anchor.set(0.5);
 	gameSprite.x = GWIDTH/2;
 	gameSprite.y = GHEIGHT/2;
+	bg = new PIXI.Sprite.fromImage("bg.png");
+	bbg = new PIXI.Sprite.fromImage("bbg.png");
+	bg.alpha = 0.5;
+	bbg.alpha = 0.7;
+	bbgc = new PIXI.Container();
+	bbgc.addChild(bbg);
+	bbgm = new PIXI.Graphics();
+	bbgc.mask = bbgm;
+	bbgm.beginFill(0xFFFFFF, 1);
+	bbgm.drawRect(0, 0, MWIDTH, MHEIGHT);
+	bbgm.endFill();
 	spawnPlayer();
 	animate();
 }

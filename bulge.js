@@ -37,7 +37,7 @@ function BulgePinchFilter()
         // custom uniforms
         {
             radius: { type: '1f', value: 600 },
-            strength: { type: '1f', value: 0.30 },
+            strength: { type: '1f', value: 0.25 },
             center: { type: 'v2', value: {x: GWIDTH/2, y: GHEIGHT/2} },
             texSize: { type: 'v2', value: {x: GWIDTH, y:GHEIGHT } }
         }
