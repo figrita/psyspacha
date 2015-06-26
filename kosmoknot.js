@@ -29,8 +29,12 @@ container.addChild(beamers);
 var snakes = new PIXI.Container();
 container.addChild(snakes);
 
+var seekers = new PIXI.Container();
+container.addChild(seekers);
+
 var powerups = new PIXI.Container();
 container.addChild(powerups);
+
 
 var bulx = 0,//input counters
 	buly = 0;
@@ -80,8 +84,8 @@ function create() {
 	gameSprite.y = GHEIGHT/2;
 	bg = new PIXI.Sprite.fromImage("bg.png");
 	bbg = new PIXI.Sprite.fromImage("bbg.png");
-	bg.alpha = 0.5;
-	bbg.alpha = 0.7;
+	bg.alpha = 0.6;
+	bbg.alpha = 0.8;
 	bbgc = new PIXI.Container();
 	bbgc.addChild(bbg);
 	bbgm = new PIXI.Graphics();
@@ -179,6 +183,7 @@ function drawMore(x, y, width, height){
 function update() {
 	beamers.children.forEach(upBeamer);
 	snakes.children.forEach(upSnake);
+	seekers.children.forEach(upSeeker);
 	upPlayer();
 	upBullet();
 	upPowerups();

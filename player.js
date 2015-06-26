@@ -16,8 +16,10 @@ function spawnPlayer(){
             player.invincibleCounter = 50;
         }
     };
-    player.getHealth = function(){
-        return player.health;
+    player.collideHealth = function(){
+        player.health += 30;
+        if (player.health > 100)
+            player.health = 100;
     };
     player.healthtext = new PIXI.Text("Health: " + player.health, style);
     player.healthtext.x = 0;
@@ -49,7 +51,7 @@ function upPlayer() {
     if (player.vy > 0)
         player.vy -= .1;
     hexCorrect(player);
-    player.healthtext.text = "Health:" + player.getHealth();
+    player.healthtext.text = "Health:" + player.health;
 
     if (tintd <= 0x000010 || tintd >= 0x0000e0) {
         tinter = -tinter;

@@ -34,6 +34,7 @@ function spawnBeamer() {
 function upBeamer(thisbeamer){
 	if (thisbeamer.health <= 0){
 		score += beamerscore;
+		spawnHealth(thisbeamer.x, thisbeamer.y);
 		beamers.removeChild(thisbeamer);
 		thisbeamer.destroy();
 		return 0;

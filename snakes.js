@@ -97,12 +97,18 @@ function upSnake(thissnake){
 			for (i = 0; i < 20; i++) {
 				if (thissnake.deathflail == i+40){
 					thissnake.getChildAt(i).visible = false;
+					if(i == 0) {
+						if (getRandomInt(1, 3) == 2) {
+							spawnMulti(thissnake.getChildAt(0).x, thissnake.getChildAt(0).y);
+						}
+					}
 				}
 				if ( 60 - thissnake.deathflail - i > 0 && 60 - thissnake.deathflail - i < 20){
 					beamgfx.lineStyle(3, thissnake.colors[i], 1 / (60 - thissnake.deathflail - i));
 					drawMore(thissnake.getChildAt(i).x +.5 * thissnake.getChildAt(i).width, thissnake.getChildAt(i).y +.5 * thissnake.getChildAt(i).height, (60 - thissnake.deathflail - i));
 				}
 			}
+
 		} else {
 			thissnake.children.forEach(function (thissnakebit) {
 				thissnake.removeChild(thissnakebit);
