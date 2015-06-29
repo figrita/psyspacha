@@ -3,10 +3,11 @@ var snakesteps = 13;
 var snakescore = 1500;
 
 function spawnSnake(){
-	var snakex = getRandomInt(0, MWIDTH);
-	var snakey = getRandomInt(0, MHEIGHT);
 	var wholesnake = new PIXI.Container();
 	wholesnake.health = 15;
+	wholesnake.seed = Math.random() * PIXI.PI_2;
+	var snakex = Math.floor(Math.cos(wholesnake.seed) * 240) + player.x;
+	var snakey = Math.floor(Math.sin(wholesnake.seed) * 210) + player.y;
 	wholesnake.hit = false;
 	wholesnake.directions = new Array(20);
 	wholesnake.directions[20] = getRandomInt(1,2);
@@ -19,6 +20,7 @@ function spawnSnake(){
 		snakebit.anchor.y = 0;
 		snakebit.x = snakex;
 		snakebit.y = snakey;
+		hexCorrect(snakebit);
 		snakebit.tint = wholesnake.colors[i];
 		snakebit.collideHandler = function(){
 			wholesnake.health--;

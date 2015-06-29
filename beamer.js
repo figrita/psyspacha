@@ -13,8 +13,10 @@ function spawnBeamer() {
 	beamer.tint = beamer.colors[0];
 	beamer.cindex = 0;
 	beamer.alpha = 1;
-	beamer.x = getRandomInt(0,MWIDTH);
-	beamer.y = getRandomInt(0,MHEIGHT);
+	beamer.seed = Math.random() * PIXI.PI_2;
+	beamer.x = Math.floor(Math.cos(beamer.seed) * 240) + player.x;
+	beamer.y = Math.floor(Math.sin(beamer.seed) * 210) + player.y;
+	hexCorrect(beamer);
 	beamer.vx = getRandomInt(1,2);
 	beamer.vy = getRandomInt(1,2);
 	if (getRandomInt(0,1)){
@@ -34,7 +36,8 @@ function spawnBeamer() {
 function upBeamer(thisbeamer){
 	if (thisbeamer.health <= 0){
 		score += beamerscore;
-		spawnHealth(thisbeamer.x, thisbeamer.y);
+		if(getRandomInt(0, 5) == 3)
+			spawnHealth(thisbeamer.x, thisbeamer.y);
 		beamers.removeChild(thisbeamer);
 		thisbeamer.destroy();
 		return 0;

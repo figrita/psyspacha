@@ -10,6 +10,8 @@ var score = 0;
 
 var RENDER_MARGIN = 80;
 
+var shaker = 0;
+
 var renderer = new PIXI.WebGLRenderer(GWIDTH, GHEIGHT, {backgroundColor: 0x000000});
 document.body.appendChild(renderer.view);
 
@@ -17,10 +19,13 @@ var gamePort;
 var portContainer = new PIXI.Container();
 var gameSprite;
 var bulger = new BulgePinchFilter();
-var count = 0;
+
 var container = new PIXI.Container();
 var bullets = new PIXI.Container();
 container.addChild(bullets);
+
+var spats = new PIXI.Container();
+container.addChild(spats);
 
 var beamers = new PIXI.Container();
 var beamgfx = new PIXI.Graphics();
@@ -31,6 +36,9 @@ container.addChild(snakes);
 
 var seekers = new PIXI.Container();
 container.addChild(seekers);
+
+var spitters = new PIXI.Container();
+container.addChild(spitters);
 
 var powerups = new PIXI.Container();
 container.addChild(powerups);
@@ -83,16 +91,10 @@ function create() {
 	gameSprite.x = GWIDTH/2;
 	gameSprite.y = GHEIGHT/2;
 	bg = new PIXI.Sprite.fromImage("bg.png");
-	bbg = new PIXI.Sprite.fromImage("bbg.png");
+	bbgt = new PIXI.Texture.fromImage("bbg.png");
+	bbg = new PIXI.extras.TilingSprite(bbgt, MWIDTH, MHEIGHT);
 	bg.alpha = 0.6;
-	bbg.alpha = 0.8;
-	bbgc = new PIXI.Container();
-	bbgc.addChild(bbg);
-	bbgm = new PIXI.Graphics();
-	bbgc.mask = bbgm;
-	bbgm.beginFill(0xFFFFFF, 1);
-	bbgm.drawRect(0, 0, MWIDTH, MHEIGHT);
-	bbgm.endFill();
+	bbg.alpha = 0.7;
 	spawnPlayer();
 	animate();
 }
@@ -132,6 +134,8 @@ function hexCorrect(character) {
 			character.x -= MWIDTH / 2;
 		}
 	}
+	//character.y = Math.floor(character.y);
+	//character.x = Math.floor(character.x);
 
 }
 
@@ -184,6 +188,8 @@ function update() {
 	beamers.children.forEach(upBeamer);
 	snakes.children.forEach(upSnake);
 	seekers.children.forEach(upSeeker);
+	spitters.children.forEach(upSpitter);
+	spats.children.forEach(upSpat);
 	upPlayer();
 	upBullet();
 	upPowerups();

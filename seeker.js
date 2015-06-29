@@ -16,8 +16,8 @@ function spawnSeeker() {
     seeker.cindex = 0;
     seeker.alpha = 1;
     seeker.seed = Math.random() * PIXI.PI_2;
-    seeker.x = Math.cos(seeker.seed) * 240 + player.x;
-    seeker.y = Math.sin(seeker.seed) * 210 + player.y;
+    seeker.x = Math.floor(Math.cos(seeker.seed) * 240) + player.x;
+    seeker.y = Math.floor(Math.sin(seeker.seed) * 210) + player.y;
     hexCorrect(seeker);
     seeker.dx = .02;
     seeker.dy = .02;
@@ -88,16 +88,16 @@ function upSeeker(thisseeker){
     }
 
 
-    if(thisseeker.vx < -4){
+    if(thisseeker.vx < -5){
         thisseeker.vx += .2;
     }
-    if(thisseeker.vx > 4){
+    if(thisseeker.vx > 5){
         thisseeker.vx -= .2;
     }
-    if(thisseeker.vy < -4){
+    if(thisseeker.vy < -5){
         thisseeker.vy += .2;
     }
-    if(thisseeker.vy > 4){
+    if(thisseeker.vy > 5){
         thisseeker.vy -= .2;
     }
 

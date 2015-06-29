@@ -22,7 +22,9 @@ function levelMachine(level){
     if (getRandomInt(0, 1000) === 2){
         spawnSeeker();
     }
-
+    if (getRandomInt(0, 1000) === 2){
+        spawnSpitter();
+    }
 }
 
 function level(beamerChance, beamerWait, snakeChance, snakeWait){

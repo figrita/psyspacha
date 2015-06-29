@@ -63,6 +63,11 @@ function upPlayer() {
         } else {
             player.tint = 0xFF0000;
         }
+        if (player.invincibleCounter %2 == 0 && player.invincibleCounter > 40) {
+            shaker += 2;
+        } else {
+            shaker = 0;
+        }
         player.invincibleCounter--;
     } else {
         player.tint = 0x00ff00 + tintd;

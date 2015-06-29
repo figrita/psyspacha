@@ -1,6 +1,6 @@
 function renderMap(x, y) {
-	mapSprite.x = x + GWIDTH/2 - player.width/2 - player.x;
-	mapSprite.y = y + GHEIGHT/2 - player.height/2 - player.y;
+	mapSprite.x = x + GWIDTH/2 - player.width/2 - player.x + shaker;
+	mapSprite.y = y + GHEIGHT/2 - player.height/2 - player.y - shaker;
 	gamePort.render(portContainer);
 	/*if (clearit) {
 		renderer.clearBeforeRender = false;
@@ -9,10 +9,11 @@ function renderMap(x, y) {
 
 function render() {
 	mapTexture.clear();
-	bbg.x = -player.x * (.5);
-	bbg.y = -player.y * (.5);
-	mapTexture.render(bbgc);
 	mapTexture.render(bg);
+	bbg.tilePosition.x = -player.x * (.5);
+	bbg.tilePosition.y = -player.y * (.5);
+	mapTexture.render(bbg);
+
 	mapTexture.render(container);
 	mapTexture.render(beamgfx);
 	beamgfx.clear();

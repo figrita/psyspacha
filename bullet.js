@@ -84,8 +84,7 @@ function upBullet() {
     });
     if (bulwait) {
         bulwait--;
-    }
-    else if (bulvy || bulvx) {
+    } else if (bulvy || bulvx) {
         fireBullet();
     }
 }
