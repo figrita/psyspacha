@@ -2,9 +2,6 @@ function renderMap(x, y) {
 	mapSprite.x = x + GWIDTH/2 - player.width/2 - player.x + shaker;
 	mapSprite.y = y + GHEIGHT/2 - player.height/2 - player.y - shaker;
 	gamePort.render(portContainer);
-	/*if (clearit) {
-		renderer.clearBeforeRender = false;
-	}*/
 }
 
 function render() {
@@ -13,13 +10,10 @@ function render() {
 	bbg.tilePosition.x = -player.x * (.5);
 	bbg.tilePosition.y = -player.y * (.5);
 	mapTexture.render(bbg);
-
 	mapTexture.render(container);
-	mapTexture.render(beamgfx);
-	beamgfx.clear();
+	mapTexture.render(graphics);
+	graphics.clear();
 	gamePort.clear();
-
-
 	//This tiles the Map on the Sphere.  It is important to render from the bottom right corner,
 	// because the sprites overflow on the bottom and right edges. this way the BG does not render over the sprites
 	if (player.y > MHEIGHT - 90) {
@@ -49,11 +43,9 @@ function render() {
 	}
 
 	renderer.clearBeforeRender = true;
-	/*gameSprite.scale.x = 1 + Math.sin(count) * 0.02;
-	gameSprite.scale.y = 1 + Math.cos(count) * 0.02;
-	count += 0.1;*/
 	gameSprite.filters = [bulger];
 	renderer.render(gameSprite);
 	renderer.clearBeforeRender = false;
+	scoretext.text = "Score: " + score;
 	renderer.render(text);
 }

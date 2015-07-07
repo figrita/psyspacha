@@ -1,3 +1,6 @@
+var multiTime = 0;
+var streamTime = 0;
+
 var multiHolder = new PIXI.Container();
 var healthHolder = new PIXI.Container();
 
@@ -14,7 +17,7 @@ function spawnMulti(x, y){
     multi.y = y;
     hexCorrect(multi);
     multi.collideHandler = function(){
-        multitime += 300;
+        multiTime += 300;
         multiHolder.removeChild(multi);
         multi.destroy();
     }
@@ -35,16 +38,13 @@ function spawnHealth(x, y){
 }
 
 function upPowerups(){
-    if(multitime){
-        multishoot = true;
-        multitime--;
-    } else {
-        multishoot = false;
+    if(multiTime){
+        multiTime--;
     }
-    multiHolder.children.forEach(function(thismulti){
-       collideRect(thismulti, player, thismulti.collideHandler, null)
-    });
-    healthHolder.children.forEach(function(thishealth){
-        collideRect(thishealth, player, thishealth.collideHandler, player.collideHealth)
-    });
+    for (var i = multiHolder.children.length - 1; i >= 0; i--) {
+        collideRect(multiHolder.getChildAt(i), player, multiHolder.getChildAt(i).collideHandler, null);
+    };
+    for (var i = healthHolder.children.length - 1; i >= 0; i--) {
+        collideRect(healthHolder.getChildAt(i), player, healthHolder.getChildAt(i).collideHandler, null);
+    };
 }

@@ -1,10 +1,6 @@
 var hypot = 300;// this is the furthest possible pythag two things can be
 var seekerscore = 2500;
 
-function pythag(x, y){
-    return Math.sqrt((x * x) + (y * y));
-}
-
 function spawnSeeker() {
     var seeker = PIXI.Sprite.fromImage('beamer.png');
     seekers.addChild(seeker);
@@ -13,7 +9,6 @@ function spawnSeeker() {
     seeker.anchor.x = 0;
     seeker.anchor.y = 0;
     seeker.tint = 0xFFFF00;
-    seeker.cindex = 0;
     seeker.alpha = 1;
     seeker.seed = Math.random() * PIXI.PI_2;
     seeker.x = Math.floor(Math.cos(seeker.seed) * 240) + player.x;
@@ -32,7 +27,46 @@ function spawnSeeker() {
     };
 }
 
+function spawnSeekerAt(x,y) {
+    var seeker = PIXI.Sprite.fromImage('beamer.png');
+    seekers.addChild(seeker);
+    seeker.health = 2;
+    seeker.hit = false;
+    seeker.anchor.x = 0;
+    seeker.anchor.y = 0;
+    seeker.tint = 0xFFFF00;
+    seeker.alpha = .9;
+    seeker.x = x;
+    seeker.y = y;
+    hexCorrect(seeker);
+    seeker.dx = .02;
+    seeker.dy = .02;
+    seeker.goalx = 0;
+    seeker.goaly = 0;
+    seeker.vx = 0;
+    seeker.vy = 0;
+    seeker.max = 0;
+    seeker.collideHandler = function(){
+        seeker.health--;
+        seeker.hit = true;
+    };
+}
+function fastPythag(x, y){
+    return (x * x) + (y * y);
+}
 function upSeeker(thisseeker){
+    var min = null;
+    var minx = null;
+    var miny = null;
+    function findmin(x,y){
+        var d = fastPythag(x,y);
+        if(d < min || min == null){
+            min = d;
+            minx = x;
+            miny = y;
+        }
+
+    }
     if (thisseeker.health <= 0){
         score += seekerscore;
         seekers.removeChild(thisseeker);
@@ -44,28 +78,15 @@ function upSeeker(thisseeker){
     thisseeker.goaly = player.y - thisseeker.y;
 
 
-//This is pretty gross, but it works for now
-    //traverse around each adjacent tile and check for the pythag
-    //would be better to get the minimum, but this works well
-    if(pythag(thisseeker.goalx, thisseeker.goaly) > hypot){
-        thisseeker.goalx -= MWIDTH;
-        if(pythag(thisseeker.goalx, thisseeker.goaly) > hypot){
-            thisseeker.goalx += 2 * MWIDTH;
-            if(pythag(thisseeker.goalx, thisseeker.goaly) > hypot){
-                thisseeker.goalx -= .5 * MWIDTH;
-                thisseeker.goaly -= MHEIGHT;
-                if(pythag(thisseeker.goalx, thisseeker.goaly) > hypot){
-                    thisseeker.goaly += 2* MHEIGHT;
-                    if(pythag(thisseeker.goalx, thisseeker.goaly) > hypot){
-                        thisseeker.goalx -= MWIDTH;
-                        if(pythag(thisseeker.goalx, thisseeker.goaly) > hypot){
-                            thisseeker.goaly -= 2* MHEIGHT;
-                        }
-                    }
-                }
-            }
-        }
-    }
+    findmin(thisseeker.goalx, thisseeker.goaly);
+    findmin(thisseeker.goalx - MWIDTH, thisseeker.goaly);
+    findmin(thisseeker.goalx + MWIDTH, thisseeker.goaly);
+    findmin(thisseeker.goalx - .5 * MWIDTH, thisseeker.goaly - MHEIGHT);
+    findmin(thisseeker.goalx + .5 * MWIDTH, thisseeker.goaly - MHEIGHT);
+    findmin(thisseeker.goalx - .5 * MWIDTH, thisseeker.goaly + MHEIGHT);
+    findmin(thisseeker.goalx + .5 * MWIDTH, thisseeker.goaly + MHEIGHT);
+    thisseeker.goalx = minx;
+    thisseeker.goaly = miny;
 
     if (thisseeker.goalx > 0){
         thisseeker.vx += thisseeker.dx;
@@ -88,16 +109,16 @@ function upSeeker(thisseeker){
     }
 
 
-    if(thisseeker.vx < -5){
+    if(thisseeker.vx < -3){
         thisseeker.vx += .2;
     }
-    if(thisseeker.vx > 5){
+    if(thisseeker.vx > 3){
         thisseeker.vx -= .2;
     }
-    if(thisseeker.vy < -5){
+    if(thisseeker.vy < -3){
         thisseeker.vy += .2;
     }
-    if(thisseeker.vy > 5){
+    if(thisseeker.vy > 3){
         thisseeker.vy -= .2;
     }
 
@@ -106,7 +127,7 @@ function upSeeker(thisseeker){
 
     hexCorrect(thisseeker);
     collideRect(thisseeker, player, thisseeker.collideHandler, player.collideHandler);
-    bullets.children.forEach(function (thisbullet) {
-        collideRect(thisbullet, thisseeker, thisbullet.collideHandler, thisseeker.collideHandler);
-    });
+    for (var i = bullets.children.length - 1; i >= 0; i--) {
+        collideRect(bullets.getChildAt(i), thisseeker, function(){bullCollideHandler(i)}, thisseeker.collideHandler);
+    }
 }

@@ -1,3 +1,8 @@
+var player;
+var tinter = 0x000005;//value to tint player by
+var tintd = 0x000020;//value to change tinter by
+
+
 function spawnPlayer(){
     player = PIXI.Sprite.fromImage('playersprite.png');
 
@@ -6,6 +11,7 @@ function spawnPlayer(){
     player.anchor.y = 0;
     player.x = GWIDTH/2 - 16;
     player.y = 50;
+    player.v = 0;
     player.vx = 0;
     player.vy = 0;
     player.health = 100;
@@ -28,13 +34,12 @@ function spawnPlayer(){
 }
 
 function upPlayer() {
-    if (keyx * player.vx > 0 && keyy * player.vy > 0 && Math.abs(player.vx) < 4 && Math.abs(player.vy) < 4) {
-        player.vx += keyx * .5;
-        player.vy += keyy * .5;
-    } else if (keyy && Math.abs(player.vy) < 4) {
-        player.vy += keyy * .7;
-    } else if (keyx && Math.abs(player.vx) < 4) {
-        player.vx += keyx * .7;
+    player.vy += keyy * .3;
+    player.vx += keyx * .3;
+    player.v = pythag(player.vx, player.vy);
+    if (player.v > 4){
+        player.vx = (player.vx/player.v) * 4;
+        player.vy = (player.vy/player.v) * 4;
     }
     if (player.vy < .1 && player.vy > -.1)
         player.vy = 0
@@ -42,14 +47,9 @@ function upPlayer() {
         player.vx = 0
     player.x += player.vx;
     player.y += player.vy;
-    if (player.vx < 0)
-        player.vx += .1;
-    if (player.vx > 0)
-        player.vx -= .1;
-    if (player.vy < 0)
-        player.vy += .1;
-    if (player.vy > 0)
-        player.vy -= .1;
+    player.vx = (player.vx/4) * 3.9;
+    player.vy = (player.vy/4) * 3.9;
+
     hexCorrect(player);
     player.healthtext.text = "Health:" + player.health;
 
@@ -64,7 +64,7 @@ function upPlayer() {
             player.tint = 0xFF0000;
         }
         if (player.invincibleCounter %2 == 0 && player.invincibleCounter > 40) {
-            shaker += 2;
+            shaker += 3;
         } else {
             shaker = 0;
         }

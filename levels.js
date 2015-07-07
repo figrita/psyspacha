@@ -1,37 +1,23 @@
-function levelMachine(level){
-    if (beamerwait) {
-        beamerwait--;
-    }
-    else if (getRandomInt(0, 100) > level.beamerChance) {
+function levelMachine(){
+    /*if (beamers.children.length == 0) {
         spawnBeamer();
-        beamerwait += level.snakeWait;
     }
-    else {
-        beamerwait += level.beamerWait;
-    }
-    if (snakewait) {
-        snakewait--;
-    }
-    else if (getRandomInt(0, 100) > level.snakeChance) {
+    if (snakes.children.length == 0){
         spawnSnake();
-        snakewait += level.snakeWait;
     }
-    else {
-        snakewait += level.snakeWait;
-    }
-    if (getRandomInt(0, 1000) === 2){
+    if (seekers.children.length == 0){
         spawnSeeker();
     }
-    if (getRandomInt(0, 1000) === 2){
+    if (spitters.children.length == 0){
+        spawnSpitter();
+    }*/
+    if (getRandomInt(0, 200) === 1 && beamers.children.length < 2) {
+        spawnBeamer();
+    } else if (getRandomInt(0, 150) ===1 && snakes.children.length < 4) {
+        spawnSnake();
+    } else if (getRandomInt(0, 300) === 1 && seekers.children.length < 4){
+        spawnSeeker();
+    } else if (getRandomInt(0, 200) === 1 && spitters.children.length < 2){
         spawnSpitter();
     }
 }
-
-function level(beamerChance, beamerWait, snakeChance, snakeWait){
-    this.beamerChance = beamerChance;
-    this.beamerWait = beamerWait;
-    this.snakeChance = snakeChance;
-    this.snakeWait = snakeWait;
-}
-
-var level1 = new level(75, 60, 80, 60);

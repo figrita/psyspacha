@@ -28,8 +28,6 @@ function spawnSpitter() {
         if (getRandomInt(0,1))
             spitter.vy = -spitter.vy;
     }
-    spitter.svx;
-    spitter.svy;
     if (getRandomInt(0, 1)){
         spitter.svx = spitter.vy;
         spitter.svy = spitter.vx;
@@ -39,7 +37,7 @@ function spawnSpitter() {
     }
     spitter.shoot = function(){
         spitter.counter = 1;
-        spawnSpat(spitter.x,spitter.y, spitter.vy, spitter.vx, spitter.svx, spitter.svy);
+        spawnSpat(spitter.x + spitter.width/2,spitter.y + spitter.height/2, spitter.vy, spitter.vx, spitter.svx, spitter.svy);
     };
     spitter.collideHandler = function(){
         spitter.health--;
@@ -67,9 +65,9 @@ function upSpitter(thisspitter) {
     }
 
     collideRect(thisspitter, player, null, player.collideHandler);
-    bullets.children.forEach(function (thisbullet) {
-        collideRect(thisbullet, thisspitter, thisbullet.collideHandler, thisspitter.collideHandler);
-    });
+    for (var i = bullets.children.length - 1; i >= 0; i--) {
+        collideRect(bullets.getChildAt(i), thisspitter, function(){bullCollideHandler(i)}, thisspitter.collideHandler);
+    };
 }
 
 function spawnSpat(x, y, vx, vy, svx, svy) {
@@ -80,6 +78,7 @@ function spawnSpat(x, y, vx, vy, svx, svy) {
     spat.tint = 0xFF00FF;
     spat.x = x;
     spat.y = y;
+    hexCorrect(spat);
     spat.vx = svx;
     spat.vy = svy;
     spat.d = pythag(spat.vx, spat.vy);

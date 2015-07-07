@@ -1,5 +1,19 @@
+var bulx = 0,//input counters
+    buly = 0;
+var bulvx = 0,
+    bulvy = 0;
+var bulwait = 0;//timer for next bullet
+var cs2 = Math.cos(.2);
+var sn2 = Math.sin(.2);
+var cs3 = Math.cos(-.2);
+var sn3 = Math.sin(-.2);
+
 function fireBullet() {
-    bulwait = 10;
+    if (streamTime) {
+        bulwait = 0;
+    } else {
+        bulwait = 3;
+    }
     var bullet = PIXI.Sprite.fromImage('bullet.png');
     bullets.addChild(bullet);
     bullet.anchor.x = 0;
@@ -11,11 +25,7 @@ function fireBullet() {
     bullet.d = Math.sqrt((bullet.vx * bullet.vx) + (bullet.vy * bullet.vy));
     bullet.trav = 0;
     bullet.max = 400;
-    bullet.collideHandler = function(){
-        bullets.removeChild(bullet);
-        bullet.destroy();
-    };
-    if (multishoot){
+    if (multiTime){
         var bullet2 = PIXI.Sprite.fromImage('bullet.png');
         bullets.addChild(bullet2);
         bullet2.anchor.x = 0;
@@ -24,13 +34,9 @@ function fireBullet() {
         bullet2.y = player.y + 13;
         bullet2.vx =  bulvx * cs2 - bulvy * sn2;
         bullet2.vy = bulvx * sn2 + bulvy * cs2;
-        bullet2.d = Math.sqrt((bullet.vx * bullet.vx) + (bullet.vy * bullet.vy));
+        bullet2.d = pythag(bullet2.vx, bullet2.vy);
         bullet2.trav = 0;
         bullet2.max = 400;
-        bullet2.collideHandler = function(){
-            bullets.removeChild(bullet2);
-            bullet2.destroy();
-        }
         var bullet3 = PIXI.Sprite.fromImage('bullet.png');
         bullets.addChild(bullet3);
         bullet3.anchor.x = 0;
@@ -39,21 +45,28 @@ function fireBullet() {
         bullet3.y = player.y + 13;
         bullet3.vx =  bulvx * cs3 - bulvy * sn3;
         bullet3.vy = bulvx * sn3 + bulvy * cs3;
-        bullet3.d = Math.sqrt((bullet.vx * bullet.vx) + (bullet.vy * bullet.vy));
+        bullet3.d = pythag(bullet3.vx, bullet3.vy);
         bullet3.trav = 0;
         bullet3.max = 400;
-        bullet3.collideHandler = function(){
-            bullets.removeChild(bullet3);
-            bullet3.destroy();
-        }
     }
 }
 
+bullCollideHandler = function(idx) {
+    bullets.getChildAt(idx).destroy();
+    bullets.removeChildAt(idx);
+};
+
 function upBullet() {
-    cs2 = Math.cos(.2);
-    sn2 = Math.sin(.2);
-    cs3 = Math.cos(-.2);
-    sn3 = Math.sin(-.2);
+    for (var i = bullets.children.length - 1; i >= 0; i--){
+        bullets.children[i].trav += bullets.children[i].d;
+        bullets.children[i].x += bullets.children[i].vx;
+        bullets.children[i].y += bullets.children[i].vy;
+        hexCorrect(bullets.children[i]);
+        if (bullets.children[i].trav >= bullets.children[i].max) {
+            bullets.getChildAt(i).destroy();
+            bullets.removeChildAt(i);
+        }
+    }
     if (buly) {
         if (bulx) {
             bulvy = buly * 7;
@@ -72,16 +85,6 @@ function upBullet() {
         bulvx = 0;
         bulvy = 0;
     }
-    bullets.children.forEach(function(thisbullet) {
-        thisbullet.trav += thisbullet.d;
-        thisbullet.x += thisbullet.vx;
-        thisbullet.y += thisbullet.vy;
-        hexCorrect(thisbullet);
-        if (thisbullet.trav > thisbullet.max) {
-            bullets.removeChild(thisbullet);
-            thisbullet.destroy();
-        }
-    });
     if (bulwait) {
         bulwait--;
     } else if (bulvy || bulvx) {

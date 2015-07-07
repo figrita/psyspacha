@@ -51,9 +51,9 @@ function upBeamer(thisbeamer){
 			thisbeamer.cindex++;
 			thisbeamer.tint = thisbeamer.colors[thisbeamer.cindex];
 		}
-		bullets.children.forEach(function (thisbullet) {
-			collideRect(thisbullet, thisbeamer, thisbullet.collideHandler, thisbeamer.collideHandler);
-		});
+		for (var i = bullets.children.length - 1; i >= 0; i--) {
+			collideRect(bullets.getChildAt(i), thisbeamer, function(){bullCollideHandler(i)}, thisbeamer.collideHandler);
+		};
 		thisbeamer.firecounter--;
 	} else {
 		thisbeamer.firecounter = -1;
@@ -77,13 +77,13 @@ function fireBeam(thisbeamer){
 			thisbeamer. visible = true;
 		}
 		if(thisbeamer.beamlength <= 10 && thisbeamer.beamlength >= 2) {
-			beamgfx.beginFill(0xFFFFFF, 1);
-			beamgfx.drawRect(thisbeamer.x + thisbeamer.width/2 - thisbeamer.beamlength/2, 0, thisbeamer.beamlength, thisbeamer.y);
-			beamgfx.drawRect(thisbeamer.x + thisbeamer.width/2 - thisbeamer.beamlength/2, thisbeamer.y + thisbeamer.height, thisbeamer.beamlength, MHEIGHT - (thisbeamer.y + thisbeamer.height));
-			beamgfx.drawRect((thisbeamer.x + thisbeamer.width/2 - thisbeamer.beamlength/2 + MWIDTH / 2) % MWIDTH, 0, thisbeamer.beamlength, MHEIGHT);
-			beamgfx.drawRect(0, thisbeamer.y + thisbeamer.height/2 - thisbeamer.beamlength/2, thisbeamer.x, thisbeamer.beamlength);
-			beamgfx.drawRect(thisbeamer.x + thisbeamer.width, thisbeamer.y + thisbeamer.height/2 - thisbeamer.beamlength/2, MWIDTH - (thisbeamer.x + thisbeamer.width), thisbeamer.beamlength);
-			beamgfx.endFill();
+			graphics.beginFill(0xFFFFFF, 1);
+			graphics.drawRect(thisbeamer.x + thisbeamer.width/2 - thisbeamer.beamlength/2, 0, thisbeamer.beamlength, thisbeamer.y);
+			graphics.drawRect(thisbeamer.x + thisbeamer.width/2 - thisbeamer.beamlength/2, thisbeamer.y + thisbeamer.height, thisbeamer.beamlength, MHEIGHT - (thisbeamer.y + thisbeamer.height));
+			graphics.drawRect((thisbeamer.x + thisbeamer.width/2 - thisbeamer.beamlength/2 + MWIDTH / 2) % MWIDTH, 0, thisbeamer.beamlength, MHEIGHT);
+			graphics.drawRect(0, thisbeamer.y + thisbeamer.height/2 - thisbeamer.beamlength/2, thisbeamer.x, thisbeamer.beamlength);
+			graphics.drawRect(thisbeamer.x + thisbeamer.width, thisbeamer.y + thisbeamer.height/2 - thisbeamer.beamlength/2, MWIDTH - (thisbeamer.x + thisbeamer.width), thisbeamer.beamlength);
+			graphics.endFill();
 			if(player.y + player.height > thisbeamer.y && player.y < thisbeamer.y + thisbeamer.height){
 				player.collideHandler();
 			}
@@ -94,9 +94,9 @@ function fireBeam(thisbeamer){
 				player.collideHandler();
 			}
 		} else {
-			bullets.children.forEach(function (thisbullet) {
-				collideRect(thisbullet, thisbeamer, thisbullet.collideHandler, thisbeamer.collideHandler);
-			});
+			for (var i = bullets.children.length - 1; i >= 0; i--) {
+				collideRect(bullets.getChildAt(i), thisbeamer, function(){bullCollideHandler(i)}, thisbeamer.collideHandler);
+			};
 		}
 		thisbeamer.beamlength--;
 	} else {

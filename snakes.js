@@ -13,6 +13,10 @@ function spawnSnake(){
 	wholesnake.directions[20] = getRandomInt(1,2);
 	wholesnake.blownup = false;
 	wholesnake.deathflail = 60;
+	wholesnake.collideHandler = function(){
+		wholesnake.health--;
+		wholesnake.hit = true;
+	};
 	wholesnake.colors = [0xFF0020, 0xFF2A00, 0xFF7500, 0xFFC100, 0xF1FF00, 0xA5FF00, 0x5AFF00, 0x0FFF00, 0x00FF3C, 0x00FF87, 0x00FFD3, 0x00DFFF, 0x0093FF, 0x0048FF, 0x0200FF, 0x4E00FF, 0x9900FF, 0xE500FF, 0xFF00CD, 0xFF0081];
 	for (i = 1; i <= 20; i++) {
 		var snakebit = PIXI.Sprite.fromImage('beamer.png');
@@ -22,10 +26,6 @@ function spawnSnake(){
 		snakebit.y = snakey;
 		hexCorrect(snakebit);
 		snakebit.tint = wholesnake.colors[i];
-		snakebit.collideHandler = function(){
-			wholesnake.health--;
-			wholesnake.hit = true;
-		};
 		wholesnake.addChild(snakebit);
 	}
 
@@ -43,9 +43,9 @@ function upSnake(thissnake){
 		}
 		thissnake.children.forEach(function (thissnakebit) {
 			collideRect(player, thissnakebit, player.collideHandler, null);
-			bullets.children.forEach(function (thisbullet) {
-				collideRect(thisbullet, thissnakebit, thisbullet.collideHandler, thissnakebit.collideHandler);
-			});
+			for (var i = bullets.children.length - 1; i >= 0; i--) {
+				collideRect(bullets.getChildAt(i), thissnakebit, function(){bullCollideHandler(i)}, thissnake.collideHandler);
+			};
 		});
 		if (thissnake.stepcounter == snakesteps) {
 			while (true) {
@@ -106,8 +106,8 @@ function upSnake(thissnake){
 					}
 				}
 				if ( 60 - thissnake.deathflail - i > 0 && 60 - thissnake.deathflail - i < 20){
-					beamgfx.lineStyle(3, thissnake.colors[i], 1 / (60 - thissnake.deathflail - i));
-					drawMore(thissnake.getChildAt(i).x +.5 * thissnake.getChildAt(i).width, thissnake.getChildAt(i).y +.5 * thissnake.getChildAt(i).height, (60 - thissnake.deathflail - i));
+					graphics.lineStyle(3, thissnake.colors[i], 1 / (60 - thissnake.deathflail - i));
+					drawCircles(thissnake.getChildAt(i).x +.5 * thissnake.getChildAt(i).width, thissnake.getChildAt(i).y +.5 * thissnake.getChildAt(i).height, (60 - thissnake.deathflail - i));
 				}
 			}
 

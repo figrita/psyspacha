@@ -1,23 +1,21 @@
 var GWIDTH = 800;
 var GHEIGHT = 650;
 //size of the game as rendered
-
 var MWIDTH = 600;
 var MHEIGHT = 300;
 //size of the playable, tiled map area
-
-var score = 0;
-
-var RENDER_MARGIN = 80;
-
-var shaker = 0;
-
+var RENDER_MARGIN = 80; //overlap of tiles, determines max sprite size
+var shaker = 0; //holds offset amount of rendering map.  causes shake during collision
 var renderer = new PIXI.WebGLRenderer(GWIDTH, GHEIGHT, {backgroundColor: 0x000000});
 document.body.appendChild(renderer.view);
-
 var gamePort;
 var portContainer = new PIXI.Container();
 var gameSprite;
+var mapTexture;
+var mapSprite;
+var bg;
+var bbg;
+var bbgt;
 var bulger = new BulgePinchFilter();
 
 var container = new PIXI.Container();
@@ -28,7 +26,7 @@ var spats = new PIXI.Container();
 container.addChild(spats);
 
 var beamers = new PIXI.Container();
-var beamgfx = new PIXI.Graphics();
+var graphics = new PIXI.Graphics();
 container.addChild(beamers);
 
 var snakes = new PIXI.Container();
@@ -43,32 +41,7 @@ container.addChild(spitters);
 var powerups = new PIXI.Container();
 container.addChild(powerups);
 
-
-var bulx = 0,//input counters
-	buly = 0;
-var bulvx = 0,
-	bulvy = 0;
-var bulwait = 0;//timer for next bullet
-var multishoot = false;
-var multitime = 0;
-var cs2 = Math.cos(.15);
-var sn2 = Math.sin(.15);
-var cs3 = Math.cos(-.15);
-var sn3 = Math.sin(-.15);
-
-var player;
-var mapTexture;
-var mapSprite;
-var ty = GHEIGHT / MHEIGHT;
-var tx = GWIDTH / MWIDTH;
-
-var tinter = 0x000005;//value to tint player by
-var tintd = 0x000020;//value to change tinter by
-
-var bg;
-var bbg;
-var bbgc;
-var bbgm;
+var score = 0;
 
 var loader = PIXI.loader;
 loader.add('player', "playersprite.png");
@@ -98,6 +71,48 @@ function create() {
 	spawnPlayer();
 	animate();
 }
+var spawncount = 0;
+function update() {
+	//beamers.children.forEach(upBeamer);
+	for (var i = beamers.children.length - 1; i >= 0; i--) {
+		upBeamer(beamers.getChildAt(i));
+	}
+	//snakes.children.forEach(upSnake);
+	for (var i = snakes.children.length - 1; i >= 0; i--) {
+		upSnake(snakes.getChildAt(i));
+	}
+	//seekers.children.forEach(upSeeker);
+	for (var i = seekers.children.length - 1; i >= 0; i--) {
+		upSeeker(seekers.getChildAt(i));
+	}
+	//spitters.children.forEach(upSpitter);
+	for (var i = spitters.children.length - 1; i >= 0; i--) {
+		upSpitter(spitters.getChildAt(i));
+	}
+	//spats.children.forEach(upSpat);
+	for (var i = spats.children.length - 1; i >= 0; i--) {
+		upSpat(spats.getChildAt(i));
+	}
+	/*
+	spawncount++;
+	if (spawncount % 30 == 0){
+		spawnSeekerAt(30+getRandomInt(-30,30),30+getRandomInt(-30,30));
+	}
+	*/
+	upPlayer();
+	upBullet();
+	upPowerups();
+	levelMachine();
+}
+
+function animate() {
+	input();
+	update();
+	render();
+	requestAnimationFrame(animate);
+}
+
+// LOGIC FUNCTION BELOW
 
 function hexCorrect(character) {
 // essentially, the playable, logical map borders 6 duplicates.
@@ -143,6 +158,10 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function pythag(x, y){
+	return Math.sqrt((x * x) + (y * y));
+}
+
 function collideRect(object, target, collidehandlerobj, collidehandlertar) {
 	if (object.y < target.y + target.height && target.y < object.y + object.height){
 		if (object.x < target.x + target.width && target.x < object.x + object.width) {
@@ -177,30 +196,9 @@ function collideRect(object, target, collidehandlerobj, collidehandlertar) {
 	}
 }
 
-function drawMore(x, y, width, height){
-	beamgfx.drawCircle(x, y, width, height);
-	beamgfx.drawCircle(x + MWIDTH, y, width, height);
-	beamgfx.drawCircle(.5 * MWIDTH + x, y + MHEIGHT, width, height);
-	beamgfx.drawCircle(x - MWIDTH *.5, y + MHEIGHT, width, height);
+function drawCircles(x, y, width, height){
+	graphics.drawCircle(x, y, width, height);
+	graphics.drawCircle(x + MWIDTH, y, width, height);
+	graphics.drawCircle(.5 * MWIDTH + x, y + MHEIGHT, width, height);
+	graphics.drawCircle(x - MWIDTH *.5, y + MHEIGHT, width, height);
 }
-
-function update() {
-	beamers.children.forEach(upBeamer);
-	snakes.children.forEach(upSnake);
-	seekers.children.forEach(upSeeker);
-	spitters.children.forEach(upSpitter);
-	spats.children.forEach(upSpat);
-	upPlayer();
-	upBullet();
-	upPowerups();
-	levelMachine(level1);
-	scoretext.text = "Score: " + score;
-}
-
-function animate() {
-	input();
-	update();
-	render();
-	requestAnimationFrame(animate);
-}
-
