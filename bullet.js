@@ -2,13 +2,14 @@ var bulx = 0,//input counters
     buly = 0;
 var bulvx = 0,
     bulvy = 0;
+var bulspeed = 5;
 var bulwait = 0;//timer for next bullet
 var cs2 = Math.cos(.2);
 var sn2 = Math.sin(.2);
 var cs3 = Math.cos(-.2);
 var sn3 = Math.sin(-.2);
 
-function fireBullet() {
+function fireBullet(thisgun) {
     if (streamTime) {
         bulwait = 0;
     } else {
@@ -18,8 +19,8 @@ function fireBullet() {
     bullets.addChild(bullet);
     bullet.anchor.x = 0;
     bullet.anchor.y = 0;
-    bullet.x = Math.round(player.x + 13);
-    bullet.y = Math.round(player.y + 13);
+    bullet.x = Math.round(thisgun.x + thisgun.width/2 - bullet.width/2);
+    bullet.y = Math.round(thisgun.y + thisgun.height/2 - bullet.height/2);
     bullet.vx = bulvx;
     bullet.vy = bulvy;
     bullet.d = Math.sqrt((bullet.vx * bullet.vx) + (bullet.vy * bullet.vy));
@@ -30,8 +31,8 @@ function fireBullet() {
         bullets.addChild(bullet2);
         bullet2.anchor.x = 0;
         bullet2.anchor.y = 0;
-        bullet2.x = player.x + 13;
-        bullet2.y = player.y + 13;
+        bullet2.x = bullet.x;
+        bullet2.y = bullet.y;
         bullet2.vx =  bulvx * cs2 - bulvy * sn2;
         bullet2.vy = bulvx * sn2 + bulvy * cs2;
         bullet2.d = pythag(bullet2.vx, bullet2.vy);
@@ -41,8 +42,8 @@ function fireBullet() {
         bullets.addChild(bullet3);
         bullet3.anchor.x = 0;
         bullet3.anchor.y = 0;
-        bullet3.x = player.x + 13;
-        bullet3.y = player.y + 13;
+        bullet3.x = bullet.x;
+        bullet3.y = bullet.y;
         bullet3.vx =  bulvx * cs3 - bulvy * sn3;
         bullet3.vy = bulvx * sn3 + bulvy * cs3;
         bullet3.d = pythag(bullet3.vx, bullet3.vy);
@@ -69,16 +70,16 @@ function upBullet() {
     }
     if (buly) {
         if (bulx) {
-            bulvy = buly * 7;
-            bulvx = bulx * 7;
+            bulvy = buly * bulspeed;
+            bulvx = bulx * bulspeed;
         }
         else {
-            bulvy = buly * 10;
+            bulvy = buly * bulspeed * Math.SQRT2;
             bulvx = 0;
         }
     }
     else if (bulx) {
-        bulvx = bulx * 10;
+        bulvx = bulx * bulspeed * Math.SQRT2;
         bulvy = 0;
     }
     else {
@@ -88,6 +89,9 @@ function upBullet() {
     if (bulwait) {
         bulwait--;
     } else if (bulvy || bulvx) {
-        fireBullet();
+        fireBullet(player);
+        for (var i = wingmans.children.length - 1; i >= 0; i--){
+            fireBullet(wingmans.getChildAt(i));
+        }
     }
 }

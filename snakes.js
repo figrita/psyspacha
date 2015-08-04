@@ -5,6 +5,7 @@ var snakescore = 1500;
 function spawnSnake(){
 	var wholesnake = new PIXI.Container();
 	wholesnake.health = 15;
+	wholesnake.spawntime = 20;
 	wholesnake.seed = Math.random() * PIXI.PI_2;
 	var snakex = Math.floor(Math.cos(wholesnake.seed) * 240) + player.x;
 	var snakey = Math.floor(Math.sin(wholesnake.seed) * 210) + player.y;
@@ -35,6 +36,15 @@ function spawnSnake(){
 }
 
 function upSnake(thissnake){
+	if (thissnake.spawntime){
+		if(thissnake.spawntime % 3 == 0){
+			thissnake.visible = false;
+		} else {
+			thissnake.visible = true;
+		}
+		thissnake.spawntime--;
+		return;
+	}
 	if (!thissnake.blownup) {
 		if (thissnake.health <= 0) {
 			score += snakescore;
@@ -43,7 +53,7 @@ function upSnake(thissnake){
 		}
 		thissnake.children.forEach(function (thissnakebit) {
 			collideRect(player, thissnakebit, player.collideHandler, null);
-			for (var i = bullets.children.length - 1; i >= 0; i--) {
+			for (var i = bullets.children.length - 1; i >= 0 && thissnake.health > 0; i--) {
 				collideRect(bullets.getChildAt(i), thissnakebit, function(){bullCollideHandler(i)}, thissnake.collideHandler);
 			};
 		});
@@ -106,7 +116,7 @@ function upSnake(thissnake){
 					}
 				}
 				if ( 60 - thissnake.deathflail - i > 0 && 60 - thissnake.deathflail - i < 20){
-					graphics.lineStyle(3, thissnake.colors[i], 1 / (60 - thissnake.deathflail - i));
+					graphics.lineStyle(6, thissnake.colors[i], 1 / (60 - thissnake.deathflail - i));
 					drawCircles(thissnake.getChildAt(i).x +.5 * thissnake.getChildAt(i).width, thissnake.getChildAt(i).y +.5 * thissnake.getChildAt(i).height, (60 - thissnake.deathflail - i));
 				}
 			}

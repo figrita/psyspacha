@@ -6,6 +6,7 @@ var spitterscore = 2500;
 function spawnSpitter() {
     var spitter = PIXI.Sprite.fromImage('beamer.png');
     spitters.addChild(spitter);
+    spitter.spawntime = 20;
     spitter.health = 3;
     spitter.hit = false;
     spitter.anchor.x = 0;
@@ -37,7 +38,7 @@ function spawnSpitter() {
     }
     spitter.shoot = function(){
         spitter.counter = 1;
-        spawnSpat(spitter.x + spitter.width/2,spitter.y + spitter.height/2, spitter.vy, spitter.vx, spitter.svx, spitter.svy);
+        spawnSpat(spitter.x + spitter.width/2,spitter.y + spitter.height/2, spitter.svx, spitter.svy);
     };
     spitter.collideHandler = function(){
         spitter.health--;
@@ -46,6 +47,15 @@ function spawnSpitter() {
 }
 
 function upSpitter(thisspitter) {
+    if (thisspitter.spawntime){
+        if(thisspitter.spawntime % 3 == 0){
+            thisspitter.visible = false;
+        } else {
+            thisspitter.visible = true;
+        }
+        thisspitter.spawntime--;
+        return;
+    }
     if (thisspitter.health <= 0) {
         score += spitterscore;
         spitters.removeChild(thisspitter);
@@ -66,16 +76,17 @@ function upSpitter(thisspitter) {
 
     collideRect(thisspitter, player, null, player.collideHandler);
     for (var i = bullets.children.length - 1; i >= 0; i--) {
-        collideRect(bullets.getChildAt(i), thisspitter, function(){bullCollideHandler(i)}, thisspitter.collideHandler);
+        if (thisspitter.health > 0)
+            collideRect(bullets.getChildAt(i), thisspitter, function(){bullCollideHandler(i)}, thisspitter.collideHandler);
     };
 }
 
-function spawnSpat(x, y, vx, vy, svx, svy) {
+function spawnSpat(x, y,svx, svy) {
     var spat = PIXI.Sprite.fromImage('bullet.png');
     spats.addChild(spat);
     spat.anchor.x = 0;
     spat.anchor.y = 0;
-    spat.tint = 0xFF00FF;
+    spat.tint = 0xFFccFF;
     spat.x = x;
     spat.y = y;
     hexCorrect(spat);

@@ -19,5 +19,7 @@ function levelMachine(){
         spawnSeeker();
     } else if (getRandomInt(0, 200) === 1 && spitters.children.length < 2){
         spawnSpitter();
+    } else if (getRandomInt(0, 800) === 1 && seekhives.children.length < 1){
+        spawnSeekhive();
     }
 }

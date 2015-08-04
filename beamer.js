@@ -5,6 +5,8 @@ function spawnBeamer() {
 	beamerwait = 1000;
 	var beamer = PIXI.Sprite.fromImage('beamer.png');
 	beamers.addChild(beamer);
+	beamer.spawntime = 20;
+	beamer.deathflail = 0;
 	beamer.health = 2;
 	beamer.hit = false;
 	beamer.anchor.x = 0;
@@ -34,13 +36,31 @@ function spawnBeamer() {
 }
 
 function upBeamer(thisbeamer){
-	if (thisbeamer.health <= 0){
+	if (thisbeamer.spawntime){
+		if(thisbeamer.spawntime % 3 == 0){
+			thisbeamer.visible = false;
+		} else {
+			thisbeamer.visible = true;
+		}
+		thisbeamer.spawntime--;
+		return;
+	}
+	if (thisbeamer.health <= 0  && thisbeamer.deathflail == 0) {
 		score += beamerscore;
-		if(getRandomInt(0, 5) == 3)
-			spawnHealth(thisbeamer.x, thisbeamer.y);
-		beamers.removeChild(thisbeamer);
-		thisbeamer.destroy();
-		return 0;
+		thisbeamer.deathflail = 30;
+	}
+	if (thisbeamer.deathflail){
+		thisbeamer.visible = false;
+		graphics.lineStyle(3, 0xFFFFFF, 1 / ((30 - thisbeamer.deathflail) + 1));
+		drawCircles(thisbeamer.x + thisbeamer.width *.5, thisbeamer.y +.5 * thisbeamer.height, (30 - thisbeamer.deathflail)*2);
+		if (thisbeamer.deathflail === 1) {
+			if (getRandomInt(0, 5) == 3)
+				spawnHealth(thisbeamer.x, thisbeamer.y);
+			beamers.removeChild(thisbeamer);
+			thisbeamer.destroy();
+		}
+		thisbeamer.deathflail -= 1;
+		return;
 	}
 	thisbeamer.x += thisbeamer.vx;
 	thisbeamer.y += thisbeamer.vy;
@@ -53,7 +73,7 @@ function upBeamer(thisbeamer){
 		}
 		for (var i = bullets.children.length - 1; i >= 0; i--) {
 			collideRect(bullets.getChildAt(i), thisbeamer, function(){bullCollideHandler(i)}, thisbeamer.collideHandler);
-		};
+		}
 		thisbeamer.firecounter--;
 	} else {
 		thisbeamer.firecounter = -1;
@@ -95,7 +115,8 @@ function fireBeam(thisbeamer){
 			}
 		} else {
 			for (var i = bullets.children.length - 1; i >= 0; i--) {
-				collideRect(bullets.getChildAt(i), thisbeamer, function(){bullCollideHandler(i)}, thisbeamer.collideHandler);
+				if (thisbeamer.health > 0)
+					collideRect(bullets.getChildAt(i), thisbeamer, function(){bullCollideHandler(i)}, thisbeamer.collideHandler);
 			};
 		}
 		thisbeamer.beamlength--;

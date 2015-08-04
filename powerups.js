@@ -45,6 +45,6 @@ function upPowerups(){
         collideRect(multiHolder.getChildAt(i), player, multiHolder.getChildAt(i).collideHandler, null);
     };
     for (var i = healthHolder.children.length - 1; i >= 0; i--) {
-        collideRect(healthHolder.getChildAt(i), player, healthHolder.getChildAt(i).collideHandler, null);
+        collideRect(healthHolder.getChildAt(i), player, healthHolder.getChildAt(i).collideHandler, player.collideHealth);
     };
 }

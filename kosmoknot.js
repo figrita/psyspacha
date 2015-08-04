@@ -13,10 +13,22 @@ var portContainer = new PIXI.Container();
 var gameSprite;
 var mapTexture;
 var mapSprite;
+var graphicTexture;
+var graphicSprite;
+var graphicPortTexture;
+var graphicPortSprite;
+var graphicPort;
 var bg;
 var bbg;
 var bbgt;
 var bulger = new BulgePinchFilter();
+
+var graphics = new PIXI.Graphics();
+var graphicsC = new PIXI.Container();
+graphicsCC = new PIXI.Container();
+graphicsC.addChild(graphics);
+graphicsCC.addChild(graphicsC);
+
 
 var container = new PIXI.Container();
 var bullets = new PIXI.Container();
@@ -25,8 +37,10 @@ container.addChild(bullets);
 var spats = new PIXI.Container();
 container.addChild(spats);
 
+var seekhives = new PIXI.Container();
+container.addChild(seekhives);
+
 var beamers = new PIXI.Container();
-var graphics = new PIXI.Graphics();
 container.addChild(beamers);
 
 var snakes = new PIXI.Container();
@@ -37,6 +51,9 @@ container.addChild(seekers);
 
 var spitters = new PIXI.Container();
 container.addChild(spitters);
+
+var wingmans = new PIXI.Container();
+container.addChild(wingmans);
 
 var powerups = new PIXI.Container();
 container.addChild(powerups);
@@ -55,14 +72,18 @@ loader.load();
 function create() {
 	mapTexture = new PIXI.RenderTexture(renderer, MWIDTH + RENDER_MARGIN, MHEIGHT + RENDER_MARGIN, PIXI.SCALE_MODES.LINEAR, 1);
 	mapSprite = new PIXI.Sprite(mapTexture);
+	graphicTexture = new PIXI.RenderTexture(renderer, MWIDTH + 2*RENDER_MARGIN, MHEIGHT + 2*RENDER_MARGIN);
+	graphicSprite = new PIXI.Sprite(graphicTexture);
+	graphicPortTexture = new PIXI.RenderTexture(renderer, MWIDTH, MHEIGHT);
+	graphicPortSprite = new PIXI.Sprite(graphicPortTexture);
+	graphicPort = new PIXI.Container();
+	graphicPort.addChild(graphicSprite);
 	mapSprite.x = 0;
 	mapSprite.y = 0;
 	portContainer.addChild(mapSprite);
 	gamePort = new PIXI.RenderTexture(renderer, GWIDTH, GHEIGHT, PIXI.SCALE_MODES.LINEAR, 1);
 	gameSprite = new PIXI.Sprite(gamePort);
-	gameSprite.anchor.set(0.5);
-	gameSprite.x = GWIDTH/2;
-	gameSprite.y = GHEIGHT/2;
+	gameSprite.anchor.set(0);
 	bg = new PIXI.Sprite.fromImage("bg.png");
 	bbgt = new PIXI.Texture.fromImage("bbg.png");
 	bbg = new PIXI.extras.TilingSprite(bbgt, MWIDTH, MHEIGHT);
@@ -71,7 +92,7 @@ function create() {
 	spawnPlayer();
 	animate();
 }
-var spawncount = 0;
+
 function update() {
 	//beamers.children.forEach(upBeamer);
 	for (var i = beamers.children.length - 1; i >= 0; i--) {
@@ -81,10 +102,7 @@ function update() {
 	for (var i = snakes.children.length - 1; i >= 0; i--) {
 		upSnake(snakes.getChildAt(i));
 	}
-	//seekers.children.forEach(upSeeker);
-	for (var i = seekers.children.length - 1; i >= 0; i--) {
-		upSeeker(seekers.getChildAt(i));
-	}
+
 	//spitters.children.forEach(upSpitter);
 	for (var i = spitters.children.length - 1; i >= 0; i--) {
 		upSpitter(spitters.getChildAt(i));
@@ -93,12 +111,21 @@ function update() {
 	for (var i = spats.children.length - 1; i >= 0; i--) {
 		upSpat(spats.getChildAt(i));
 	}
-	/*
-	spawncount++;
-	if (spawncount % 30 == 0){
-		spawnSeekerAt(30+getRandomInt(-30,30),30+getRandomInt(-30,30));
+
+	for (var i = wingmans.children.length - 1; i >= 0; i--){
+		upWingman(wingmans.getChildAt(i));
 	}
-	*/
+
+	for ( var i = seekhives.children.length - 1; i >= 0; i--){
+		upSeekhive(seekhives.getChildAt(i));
+	}
+
+	//seekers.children.forEach(upSeeker);
+	for (var i = seekers.children.length - 1; i >= 0; i--) {
+		upSeeker(seekers.getChildAt(i));
+	}
+
+
 	upPlayer();
 	upBullet();
 	upPowerups();
@@ -149,8 +176,6 @@ function hexCorrect(character) {
 			character.x -= MWIDTH / 2;
 		}
 	}
-	//character.y = Math.floor(character.y);
-	//character.x = Math.floor(character.x);
 
 }
 
@@ -197,8 +222,12 @@ function collideRect(object, target, collidehandlerobj, collidehandlertar) {
 }
 
 function drawCircles(x, y, width, height){
-	graphics.drawCircle(x, y, width, height);
+	graphics.drawCircle(Math.floor(x), Math.floor(y), width, height);/*
+	graphics.drawCircle(x - MWIDTH, y, width, height);
 	graphics.drawCircle(x + MWIDTH, y, width, height);
 	graphics.drawCircle(.5 * MWIDTH + x, y + MHEIGHT, width, height);
 	graphics.drawCircle(x - MWIDTH *.5, y + MHEIGHT, width, height);
+	graphics.drawCircle(.5 * MWIDTH + x, y - MHEIGHT, width, height);
+	graphics.drawCircle(x - MWIDTH *.5, y - MHEIGHT, width, height);*/
 }
+//graphics needs to render to a texture of size MWIDTHxMHEIGHT so that alpha doesn't overlap on edges
